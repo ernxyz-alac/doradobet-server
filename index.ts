@@ -1,14 +1,14 @@
 const MAIN_GAME_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventDetails?culture=es-ES&timezoneOffset=-60&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=AT&eventId="
 const GAME_SCORE_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventTrackerInfo?culture=es-ES&timezoneOffset=300&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=PE&eventId="
 
-export const getUrls = (currentGameId: number) => {
+export const getUrls = (currentGameId:string) => {
     return {
         main: `${MAIN_GAME_URL}${currentGameId}`,
         gameScore: `${GAME_SCORE_URL}${currentGameId}`,
     }
 }
 
-export const flow = async (currentGameId: number) => {
+export const flow = async (currentGameId:string) => {
     const { main, gameScore } = getUrls(currentGameId)
     const resp = await fetch(main)
     const gameData: any = await resp.json()
@@ -47,27 +47,39 @@ Bun.serve({
     port: 9001,
     async fetch(request) {
         const url = new URL(request.url);
-        
+
+        // Define CORS headers
+        const headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        };
+
+        // Handle OPTIONS request for CORS
+        if (request.method === "OPTIONS") {
+            return new Response(null, { headers });
+        }
+
         // API route
         if (url.pathname === "/data") {
-            const gameId = parseInt(url.searchParams.get("gameId") ?? "0");
+            const gameId = url.searchParams.get("gameId");
             if (!gameId) {
-                 return Response.json({ error: "Missing or invalid gameId" }, { status: 400 });
+                 return Response.json({ error: "Missing or invalid gameId" }, { status: 400, headers });
             }
             try {
                 const data = await flow(gameId);
-                return Response.json(data);
+                return Response.json(data, { headers });
             } catch (error) {
                 console.error("Error in /data endpoint:", error);
                 return Response.json(
                     { error: "Failed to fetch data" },
-                    { status: 500 }
+                    { status: 500, headers }
                 );
             }
         }
-        
+
         // Default serve
-        return new Response("Server is running", { status: 200 });
+        return new Response("Server is running", { status: 200, headers });
     },
 });
 
