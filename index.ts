@@ -1,5 +1,5 @@
-const MAIN_GAME_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventDetails?culture=es-ES&timezoneOffset=-60&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=AT&eventId="
-const GAME_SCORE_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventTrackerInfo?culture=es-ES&timezoneOffset=300&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=PE&eventId="
+const MAIN_GAME_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventDetails?culture=es-ES&timezoneOffset=300&integration=ecuabet&deviceType=1&numFormat=en-GB&countryCode=PE&eventId="
+const GAME_SCORE_URL = "https://sb2frontend-altenar2.biahosted.com/api/widget/GetEventTrackerInfo?culture=es-ES&timezoneOffset=300&integration=ecuabet&deviceType=1&numFormat=en-GB&countryCode=PE&eventId="
 
 export const getUrls = (currentGameId:string) => {
     return {
